@@ -1,0 +1,44 @@
+-- EXCEPTION 
+SET SERVEROUTPUT ON SIZE 1000000;
+CLEAR SCREEN;
+
+DECLARE
+
+  --define exceptions
+  BELOW_SALARY_RANGE EXCEPTION;
+  ABOVE_SALARY_RANGE EXCEPTION;
+  
+  --other declarations
+  n_salary PAULA.EMPLOYEE.SALARY%TYPE;
+  v_fname PAULA.EMPLOYEE.FNAME%TYPE;
+  min_salary NUMBER := 2880;
+  max_salary NUMBER := 59000;
+  
+   CURSOR cur_emp IS
+    SELECT * FROM PAULA.EMPLOYEE;
+    
+BEGIN
+
+  FOR loop_emp IN cur_emp LOOP
+  
+    n_salary := loop_emp.SALARY;
+    v_fname := loop_emp.FNAME;
+    
+    IF n_salary < min_salary THEN
+      RAISE BELOW_SALARY_RANGE;
+    ELSIF n_salary > max_salary THEN
+      RAISE ABOVE_SALARY_RANGE;
+    END IF;
+    
+  END LOOP;
+  
+  EXCEPTION
+    WHEN BELOW_SALARY_RANGE THEN
+      DBMS_OUTPUT.PUT_LINE('Employee ' || v_fname || ' has salary below the range');
+    WHEN ABOVE_SALARY_RANGE THEN
+      DBMS_OUTPUT.PUT_LINE('Employee ' || v_fname || ' has salary above the range');
+    WHEN NO_DATA_FOUND THEN
+      DBMS_OUTPUT.PUT_LINE('Employee ' || v_fname || ' not found');
+      
+    
+END;
