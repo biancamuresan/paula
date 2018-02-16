@@ -1,0 +1,20 @@
+-- BULK COLLECT: SELECT INTO
+
+SET SERVEROUTPUT ON;
+
+DECLARE
+
+  TYPE t_fName IS TABLE OF PAULA.EMPLOYEE.FNAME%TYPE;
+  fname t_fName;
+  
+BEGIN
+
+  SELECT FNAME BULK COLLECT INTO fName
+  FROM PAULA.EMPLOYEE;
+  
+  FOR idx IN 1 .. fname.COUNT
+  LOOP 
+    DBMS_OUTPUT.PUT_LINE( idx || ' - ' || fname(idx) );
+  END LOOP;
+END;
+/
